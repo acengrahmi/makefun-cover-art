@@ -1,65 +1,81 @@
-# REPORT — Neon Coast: GTA-style Cover Studio (gta6-cover-art-01)
+# Neon Coast — build report (v3, gta6-cover-art-01)
 
-## What was built
+Fresh build written in this session only. Nothing was read from, copied
+from, or reproduced from the v1/v2 build directories; all app code below was
+written from the competition spec in this session.
 
-A multi-panel GTA 6-style cover maker (`app/`, fully offline, no network requests):
+## What it is
 
-- **6 layouts** — Hero (1 photo), Split (2), Duo (2 stacked), Grid (4), Collage
-  (5: hero + 4 small), Snapshots (3 tilted polaroid frames). Title block at the
-  foot, or at the top for the tilted layout.
-- **Per-panel photo control** — upload several photos, click a panel to place a
-  photo, drag to pan, scroll / slider to zoom, "Fill all panels" reuse.
-  Two free kit sample photos ship as defaults.
-- **6 Vice City grades** — Neon Sunset, Vice Teal, Halftone Pop (posterize +
-  comic halftone dots), Mono Noir, Palm Gold, Palm Dusk; each a duotone gradient
-  map applied per panel on canvas, plus film grain + vignette.
-- **Poster lettering** — Anton condensed title (sunset gradient fill, white
-  outline), glowing Pacifico neon script subtitle, gold badge pill, 5-star row.
-  All original: no Rockstar logo, artwork or fonts (Anton + Pacifico vendored
-  under the SIL OFL).
-- **One-click PNG export** — 1080 × 1080, 1080 × 1350, 1920 × 1080, or all three
-  at once. `?shot=` scenes drive the screenshots.
+"Neon Coast", a fully offline GTA 6-style cover maker (`app/`, static files,
+zero network requests). Six layouts (Hero, Split, Duo, Grid, Collage,
+Snapshots tilted polaroids), per-panel photo placement with drag-to-pan and
+scroll/slider zoom, "Fill all panels", six Vice City colour grades as
+per-panel duotone gradient maps on canvas (Neon Sunset, Vice Teal, Halftone
+Pop with posterize + comic halftone dots, Mono Noir, Palm Gold, Palm Dusk)
+plus seeded film grain and vignette, and poster lettering: condensed
+gradient title with white outline (auto-fits so it never hits the badge),
+glowing neon script subtitle, gold badge pill, five-star row. One-click PNG
+export in 1080x1080, 1080x1350, 1920x1080, or all three. No Rockstar logo,
+artwork or font; lettering uses system condensed/script font stacks. The two
+kit sample photos ship as defaults.
 
-## Validation
+## Files
 
-- `mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts` — succeeds; `out/`
-  holds `app/`, `screenshots/`, `dossier.json` (1,064,755 bytes, under the
-  1.5 MiB cap). Two runs produce byte-identical `dossier.json` (sha256
-  `7d6f929b…eccf6`) and identical trees.
-- Headless-Chromium check: page loads with **zero external requests**; switching
-  layout/grade/size redraws cleanly; clicking Export downloads a real PNG
-  `vice-city-nights-1080x1350.png` (3,422,650 bytes, valid PNG header,
-  1080 × 1350).
-- Gate limits: app/ 10 files / 660,276 bytes (cap 993 files / 48 MiB);
-  screenshots 4 files, each ≤ 256 KiB, long side ≤ 1280, short side ≥ 480.
+- `README.md` — live make.fun badges (competition, rank, reward for
+  acengrahmi/makefun-cover-art) + bounty link, written first and never edited.
+- `app/index.html`, `app/style.css` — editor chrome (dark neon theme).
+- `app/src/render.js` — cover engine: `layoutFrames`, grade LUTs, halftone,
+  grain, vignette, polaroid frames, title band, `drawCover`,
+  `exportCoverPng`.
+- `app/src/editor.js` — state, photo tray, layout/grade chips, panel
+  picking, drag pan, wheel zoom, upload, export, `window.__neon` test hook.
+- `app/src/shots.js` — `?shot=cover` / `?shot=editor` scenes.
+- `app/samples/pier.jpg`, `app/samples/boulevard.jpg` — kit samples.
+- `main.ts` — hand-in program (written in 4 messages: initial write + 3
+  edits), copies `app/` + `screenshots/`, writes `dossier.json`, self-checks
+  the hand-in and clears stale screenshots.
+- `shots.json` — the 4 screenshot scenes.
+- `serve.ts`, `vendor/makefun-app.ts`, `LICENSE` — kit files, unchanged.
 
-## Iteration (round 1 → round 2)
+## Validation (all run in-session, headless Chromium via CDP)
 
-First screenshots showed two title-block defects, both fixed and re-shot:
+- `mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts` succeeds; run twice
+  into `out/` and `out2/` → `dossier.json` byte-identical.
+  - dossier: 776,092 bytes (cap 1,500,000), sha256
+    `ebedf071ddb97a5754cf687133484e07d2451091255b1dfcfb4d44fb343d6b74`
+  - total `/output`: 1,483,959 bytes; app/ 7 files.
+- Network: every request across all 4 scenes + the plain editor page was to
+  127.0.0.1 only (page, CSS, 3 JS modules, 2 sample photos) — zero external
+  requests. Console errors: 0 on every scene.
+- Export: `window.__neon.exportPngDataUrl(1080,1080)` returned a real PNG
+  (magic bytes verified), 1080x1080, 2,292,429 bytes; visually identical to
+  the preview (checked the saved PNG).
+- Screenshots (all generated in-session via `?shot=` + headless Chromium,
+  JPEG q72), each ≤ 256 KiB, long side ≤ 1280, short side ≥ 480:
+  - `1-cover.jpg` 1280x720, 117,247 B — exported wide cover, Collage,
+    Neon Sunset, "Sunset Heist".
+  - `2-editor.jpg` 1280x720, 97,918 B — editor, both samples loaded,
+    Collage selected.
+  - `3-cover.jpg` 1024x1280, 222,892 B — exported portrait cover, Grid 4,
+    Halftone Pop, "Boulevard Queen".
+  - `4-cover.jpg` 1080x1080, 115,487 B — exported square cover, tilted
+    Snapshots, Vice Teal, "Neon Nights".
 
-1. The badge pill and star row landed **on top of the title** in the bottom-zone
-   covers — fixed by fitting the title first and stacking badge + stars off its
-   real size.
-2. The top-zone title in the tilted layout was **clipped at the top edge**
-   (baseline too high) and its subtitle rendered off-screen — fixed by baselining
-   the title below the top margin and moving the subtitle under the title.
-   Tilted panels were also enlarged (0.52 → 0.58 height) to fill the empty
-   orange foot.
+## Defects found and fixed (viewed every screenshot, iterated)
 
-## Screenshots
+1. Badge pill overlapped long titles ("BOULEVARD QUEEN") — added title
+   auto-fit (shrink until width ≤ 58% of the band when a badge is present).
+2. Cover shots repeated one photo in every small panel — shot scenes now
+   alternate the two sample photos across slots.
+3. Tilted Snapshots polaroids clipped at the canvas edges — narrowed frames
+   to 33% width, reduced rotations (-0.09 / 0.02 / 0.08).
+4. `3-cover.jpg` was 300,381 B at JPEG q82, over the 256 KiB cap — re-shot
+   at q72 (222,892 B).
+5. My own title auto-fit edit briefly declared `titlePx` twice
+   (SyntaxError, caught by the headless run before any screenshot was
+   kept) — removed the duplicate declaration; re-verified clean.
 
-- `1-cover.jpg` (1280 × 720, 168,502 B) — exported wide cover, Collage 5-panel,
-  Neon Sunset, "VICE CITY NIGHTS".
-- `2-editor.jpg` (1280 × 720, 137,218 B) — editor with both sample photos
-  loaded, Collage layout selected, live preview with selected-panel outline.
-- `3-cover.jpg` (1024 × 1280, 243,371 B) — exported portrait cover, Grid 4,
-  Halftone Pop, "PIER PRESSURE".
-- `4-cover.jpg` (1080 × 1080, 219,986 B) — exported square cover, tilted
-  Snapshots, Vice Teal, "NIGHT SHIFT".
+## Not done by this build (parent's job)
 
-## Notes for the parent
-
-- `main.ts` rewritten in 3 separate writes; `vendor/makefun-app.ts` untouched.
-- Do NOT push / create the GitHub repo / submit from here — parent handles that.
-- Leader gap addressed: 5-panel + 4-grid multi-photo covers, halftone grade,
-  and all three post sizes, matching the leaders' feature set.
+No `makefun.mjs` record/bundle/submit command was run, nothing was pushed,
+GitHub was not touched. The live recording was left running.
