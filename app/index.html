@@ -3,76 +3,87 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Neon Coast — GTA-style Cover Studio</title>
-<link rel="icon" href="data:,">
+<title>Neon Coast — GTA 6-style Cover Maker</title>
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 <header class="topbar">
-  <div class="brand"><span class="brand-mark">NC</span><span class="brand-name">NEON COAST</span><span class="brand-sub">GTA-style cover studio</span></div>
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true">NC</span>
+    <div>
+      <h1>Neon Coast</h1>
+      <p class="tagline">GTA 6-style cover maker &middot; 100% offline &middot; your photos never leave this machine</p>
+    </div>
+  </div>
   <div class="top-actions">
-    <button id="shuffle" type="button" title="Shuffle layout and grade">Shuffle look</button>
-    <button id="exportAll" type="button" class="primary" title="Download all three post sizes">Export all 3 sizes</button>
+    <label class="size-pick">Size
+      <select id="sizeSel" aria-label="Export size">
+        <option value="1080x1080">1080 &times; 1080 square</option>
+        <option value="1080x1350">1080 &times; 1350 portrait</option>
+        <option value="1920x1080">1920 &times; 1080 wide</option>
+      </select>
+    </label>
+    <button id="exportOne" type="button" class="btn-primary">Export PNG</button>
+    <button id="exportAll" type="button">Export all 3 sizes</button>
   </div>
 </header>
-<main class="studio">
-  <aside class="panel controls" aria-label="Cover controls">
+
+<main class="workspace">
+  <aside class="panel" aria-label="Cover controls">
     <section>
-      <h2>1 · Photos</h2>
-      <p class="hint">Add your own photos — they never leave this machine. Click a tray photo, then click a panel to place it.</p>
-      <div id="tray" class="tray" role="listbox" aria-label="Photos"></div>
-      <label class="upload">+ Add photos <input id="photos" type="file" accept="image/*" multiple hidden></label>
-      <p class="hint">Tip: drag on the preview to pan the selected panel, scroll to zoom it.</p>
+      <h2>1 &middot; Photos</h2>
+      <div class="tray" id="tray"></div>
+      <div class="row">
+        <label class="btn-file">Add photos
+          <input id="uploader" type="file" accept="image/*" multiple>
+        </label>
+        <button id="fillAll" type="button">Fill all panels</button>
+      </div>
+      <p class="hint">Click a panel in the preview, then click a photo to place it there. Drag a photo to pan it, scroll or use the slider to zoom.</p>
     </section>
+
     <section>
-      <h2>2 · Layout</h2>
-      <div id="layouts" class="layouts" role="radiogroup" aria-label="Layout"></div>
+      <h2>2 &middot; Layout</h2>
+      <div class="chip-grid" id="layoutRow" role="group" aria-label="Layout"></div>
     </section>
+
     <section>
-      <h2>3 · Colour grade</h2>
-      <div id="grades" class="grades" role="radiogroup" aria-label="Colour grade"></div>
+      <h2>3 &middot; Colour grade</h2>
+      <div class="chip-grid" id="gradeRow" role="group" aria-label="Colour grade"></div>
     </section>
+
     <section>
-      <h2>4 · Lettering</h2>
+      <h2>4 &middot; Lettering</h2>
       <label class="field">Title
-        <input id="title" type="text" maxlength="28" value="VICE CITY NIGHTS">
+        <input id="titleIn" type="text" maxlength="24" value="SUNSET HEIST">
       </label>
       <label class="field">Subtitle (neon script)
-        <input id="subtitle" type="text" maxlength="40" value="neon dreams">
+        <input id="subIn" type="text" maxlength="32" value="Neon Coast">
       </label>
       <label class="field">Badge
-        <input id="badge" type="text" maxlength="40" value="LEONIDA · EST. 2026">
+        <input id="badgeIn" type="text" maxlength="20" value="NEON COAST">
       </label>
-      <label class="field">Title size
-        <input id="titleSize" type="range" min="60" max="140" value="100">
+      <label class="field">Stars
+        <input id="starsIn" type="range" min="0" max="5" step="1" value="5">
       </label>
     </section>
+
     <section>
-      <h2>5 · Selected panel</h2>
-      <div id="panelInfo" class="panel-info">Click a panel on the cover to edit it.</div>
+      <h2>5 &middot; Selected panel</h2>
       <label class="field">Zoom
-        <input id="zoom" type="range" min="100" max="300" value="100">
+        <input id="zoomIn" type="range" min="1" max="3" step="0.01" value="1">
       </label>
-      <div class="row">
-        <button id="fillAll" type="button">Fill all panels with this photo</button>
-        <button id="resetPanel" type="button">Reset panel</button>
-      </div>
-    </section>
-    <section>
-      <h2>6 · Export</h2>
-      <div id="sizes" class="sizes" role="radiogroup" aria-label="Export size"></div>
-      <button id="export" type="button" class="primary big">Download PNG</button>
+      <p class="hint" id="panelInfo">Panel 1 of 5 &middot; drag on the preview to pan</p>
       <p id="status" role="status"></p>
     </section>
   </aside>
-  <section class="stage">
-    <div class="stage-head">
-      <span id="stageLabel">Live preview — 1080 × 1080</span>
-      <span class="stage-hint">click a panel to select it · drag to pan · scroll to zoom</span>
-    </div>
-    <div class="canvas-wrap"><canvas id="preview" width="900" height="900" aria-label="Cover preview"></canvas></div>
+
+  <section class="stage" aria-label="Cover preview">
+    <canvas id="stage" width="1080" height="1080" aria-label="Cover preview — click a panel to select it"></canvas>
+    <p class="stage-note">Live preview &mdash; what you see is what exports.</p>
   </section>
 </main>
-<script type="module" src="./src/main.js"></script>
+
+<script type="module" src="./src/editor.js"></script>
 </body>
 </html>
