@@ -3,87 +3,85 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Neon Coast — GTA 6-style Cover Maker</title>
+<title>Neon Coast — GTA 6 Cover Art Maker</title>
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 <header class="topbar">
-  <div class="brand">
-    <span class="brand-mark" aria-hidden="true">NC</span>
-    <div>
-      <h1>Neon Coast</h1>
-      <p class="tagline">GTA 6-style cover maker &middot; 100% offline &middot; your photos never leave this machine</p>
-    </div>
-  </div>
+  <div class="brand"><span class="brand-mark">NC</span><span class="brand-name">Neon Coast</span><span class="brand-sub">cover studio</span></div>
   <div class="top-actions">
-    <label class="size-pick">Size
-      <select id="sizeSel" aria-label="Export size">
-        <option value="1080x1080">1080 &times; 1080 square</option>
-        <option value="1080x1350">1080 &times; 1350 portrait</option>
-        <option value="1920x1080">1920 &times; 1080 wide</option>
-      </select>
-    </label>
-    <button id="exportOne" type="button" class="btn-primary">Export PNG</button>
-    <button id="exportAll" type="button">Export all 3 sizes</button>
+    <button id="export-all" type="button" class="btn btn-gold">Export all 3 sizes</button>
   </div>
 </header>
-
-<main class="workspace">
-  <aside class="panel" aria-label="Cover controls">
-    <section>
-      <h2>1 &middot; Photos</h2>
-      <div class="tray" id="tray"></div>
-      <div class="row">
-        <label class="btn-file">Add photos
-          <input id="uploader" type="file" accept="image/*" multiple>
-        </label>
-        <button id="fillAll" type="button">Fill all panels</button>
-      </div>
-      <p class="hint">Click a panel in the preview, then click a photo to place it there. Drag a photo to pan it, scroll or use the slider to zoom.</p>
-    </section>
-
-    <section>
-      <h2>2 &middot; Layout</h2>
-      <div class="chip-grid" id="layoutRow" role="group" aria-label="Layout"></div>
-    </section>
-
-    <section>
-      <h2>3 &middot; Colour grade</h2>
-      <div class="chip-grid" id="gradeRow" role="group" aria-label="Colour grade"></div>
-    </section>
-
-    <section>
-      <h2>4 &middot; Lettering</h2>
-      <label class="field">Title
-        <input id="titleIn" type="text" maxlength="24" value="SUNSET HEIST">
+<main class="studio">
+  <aside class="controls" aria-label="Cover controls">
+    <section class="group">
+      <h2>1 · Photos</h2>
+      <label class="upload">Add photos from your machine
+        <input id="photo-input" type="file" accept="image/*" multiple>
       </label>
-      <label class="field">Subtitle (neon script)
-        <input id="subIn" type="text" maxlength="32" value="Neon Coast">
+      <div id="tray" class="tray" aria-label="Your photos"></div>
+      <div class="row">
+        <button id="use-samples" type="button" class="btn">Load sample photos</button>
+        <button id="fill-all" type="button" class="btn">Fill all panels</button>
+      </div>
+      <p class="note">Click a photo, then click a panel to place it there. Photos stay on your machine.</p>
+    </section>
+    <section class="group">
+      <h2>2 · Layout</h2>
+      <div id="layout-picker" class="picker"></div>
+    </section>
+    <section class="group">
+      <h2>3 · Colour grade</h2>
+      <div id="grade-picker" class="picker"></div>
+    </section>
+    <section class="group">
+      <h2>4 · Words</h2>
+      <label class="field">Title
+        <input id="title-input" type="text" maxlength="28" value="Neon Coast">
+      </label>
+      <label class="field">Neon subtitle
+        <input id="subtitle-input" type="text" maxlength="32" value="vice city nights">
       </label>
       <label class="field">Badge
-        <input id="badgeIn" type="text" maxlength="20" value="NEON COAST">
+        <input id="badge-input" type="text" maxlength="18" value="EST. 2026">
       </label>
       <label class="field">Stars
-        <input id="starsIn" type="range" min="0" max="5" step="1" value="5">
+        <select id="stars-input">
+          <option value="5" selected>★★★★★ (5)</option>
+          <option value="4">★★★★ (4)</option>
+          <option value="3">★★★ (3)</option>
+          <option value="2">★★ (2)</option>
+          <option value="1">★ (1)</option>
+          <option value="0">No stars</option>
+        </select>
       </label>
     </section>
-
-    <section>
-      <h2>5 &middot; Selected panel</h2>
-      <label class="field">Zoom
-        <input id="zoomIn" type="range" min="1" max="3" step="0.01" value="1">
+    <section class="group">
+      <h2>5 · Size &amp; export</h2>
+      <label class="field">Post size
+        <select id="size-input">
+          <option value="1080x1080" selected>Square · 1080 × 1080</option>
+          <option value="1080x1350">Portrait · 1080 × 1350</option>
+          <option value="1920x1080">Wide · 1920 × 1080</option>
+        </select>
       </label>
-      <p class="hint" id="panelInfo">Panel 1 of 5 &middot; drag on the preview to pan</p>
+      <label class="field">Zoom selected panel
+        <input id="zoom-input" type="range" min="100" max="300" value="100">
+      </label>
+      <div class="row">
+        <button id="export-one" type="button" class="btn btn-gold">Export PNG</button>
+        <button id="shuffle" type="button" class="btn">Shuffle grade</button>
+      </div>
       <p id="status" role="status"></p>
     </section>
   </aside>
-
-  <section class="stage" aria-label="Cover preview">
-    <canvas id="stage" width="1080" height="1080" aria-label="Cover preview — click a panel to select it"></canvas>
-    <p class="stage-note">Live preview &mdash; what you see is what exports.</p>
+  <section class="stage">
+    <div class="canvas-frame"><canvas id="preview" width="900" height="900" aria-label="Cover preview"></canvas></div>
+    <p class="hint">Click a panel to select it — drag to pan the photo, scroll to zoom. Click a photo in the tray, then a panel, to place it.</p>
+    <pre id="diag" hidden></pre>
   </section>
 </main>
-
-<script type="module" src="./src/editor.js"></script>
+<script type="module" src="./src/main.js"></script>
 </body>
 </html>
