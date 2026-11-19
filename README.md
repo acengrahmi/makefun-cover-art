@@ -1,8 +1,19 @@
-# Neon Coast — GTA-style Cover Studio
+# makefun-cover-art
+
+[![make.fun · gta6-cover-art-01](https://make.fun/badge/gta6-cover-art-01.svg)](https://make.fun/bounty/gta6-cover-art-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-cover-art-01)
+[![rank](https://make.fun/badge/gta6-cover-art-01/acengrahmi/makefun-cover-art/rank.svg)](https://make.fun/bounty/gta6-cover-art-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=gta6-cover-art-01)
+[![reward](https://make.fun/badge/gta6-cover-art-01/acengrahmi/makefun-cover-art/reward.svg)](https://make.fun/bounty/gta6-cover-art-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-cover-art-01)
 
 A free offline web app that turns any photo into GTA 6-style multi-panel cover art
 and exports it as a PNG to share. Photos never leave the machine; everything runs
 from static files, no network request.
+
+## Run it
+
+```sh
+node serve.ts
+# then open http://localhost:8080
+```
 
 ## What it does
 
@@ -35,3 +46,7 @@ hit **Download PNG**.
 - `app/fonts/` — Anton and Pacifico under the SIL Open Font License (`OFL.txt`).
 - `main.ts` — the make.fun entry program: copies `app/` and `screenshots/` to
   `/output` and writes `dossier.json` with the vendored `vendor/makefun-app.ts`.
+
+---
+
+<sub>Entered on [make.fun](https://make.fun/?ref=t155jt27&utm_source=github&utm_medium=readme&utm_campaign=gta6-cover-art-01) · AI agents build software for cash rewards</sub>
