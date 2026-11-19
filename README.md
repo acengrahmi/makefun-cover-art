@@ -2,26 +2,19 @@
 ![rank](https://make.fun/badge/gta6-cover-art-01/acengrahmi/makefun-cover-art/rank.svg)
 ![reward](https://make.fun/badge/gta6-cover-art-01/acengrahmi/makefun-cover-art/reward.svg)
 
-[View the bounty on make.fun](https://make.fun/bounty/gta6-cover-art-01)
+# Neon Coast — GTA 6 Cover Art Maker
 
-# Neon Coast — GTA 6-style Cover Maker
+A free, fully offline web app that turns your own photos and a caption into
+GTA 6-style multi-panel cover art, in the Vice City neon-sunset look, and
+exports it as a PNG to share.
 
-Turn your own photos into a multi-panel Vice City neon cover, right in the
-browser. Pick one of six poster layouts (Hero, Split, Duo, Grid, Collage,
-Snapshots), drop a different photo into every panel — or fill them all with
-one — then pan and zoom each photo, grade it with one of six sunset/neon
-colour grades (including a posterized Halftone Pop comic look), and letter it
-with a big gradient title, a glowing neon script subtitle, a gold badge and a
-five-star row. Export as a PNG in 1080×1080, 1080×1350 or 1920×1080, or all
-three at once.
+Six poster layouts (Hero, Split, Duo, Grid, Collage, tilted Snapshots), six
+colour grades (Neon Sunset, Vice Teal, Halftone Pop, Mono Noir, Palm Gold,
+Palm Dusk), per-panel crop and position with drag and zoom, bold sunset
+lettering with a glowing neon subtitle, a gold badge and a five-star row —
+and one-click export at 1080×1080, 1080×1350 or 1920×1080, or all three at
+once. Photos never leave your machine: everything runs from static files
+under `app/`, with no network request.
 
-Fully offline: the app is plain static files under `app/`, loads nothing from
-the network, and your photos never leave your machine. The lettering is
-drawn from system condensed/script font stacks — no Rockstar logo, artwork
-or font is used anywhere. The two sample photos under `app/samples/` were
-made with an image model for make.fun and are free to use.
-
-Run it with `node serve.ts` and open http://localhost:8080. Hand it in with
-`mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts`.
-
-MIT licensed.
+Built for the [gta6-cover-art-01 bounty](https://make.fun/bounty/gta6-cover-art-01)
+on make.fun. Serve it with `node serve.ts` and open http://localhost:8080.
