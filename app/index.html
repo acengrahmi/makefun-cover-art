@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neon Coast — GTA-style Cover Studio</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">NC</span><span class="brand-name">NEON COAST</span><span class="brand-sub">GTA-style cover studio</span></div>
+  <div class="top-actions">
+    <button id="shuffle" type="button" title="Shuffle layout and grade">Shuffle look</button>
+    <button id="exportAll" type="button" class="primary" title="Download all three post sizes">Export all 3 sizes</button>
+  </div>
+</header>
+<main class="studio">
+  <aside class="panel controls" aria-label="Cover controls">
+    <section>
+      <h2>1 · Photos</h2>
+      <p class="hint">Add your own photos — they never leave this machine. Click a tray photo, then click a panel to place it.</p>
+      <div id="tray" class="tray" role="listbox" aria-label="Photos"></div>
+      <label class="upload">+ Add photos <input id="photos" type="file" accept="image/*" multiple hidden></label>
+      <p class="hint">Tip: drag on the preview to pan the selected panel, scroll to zoom it.</p>
+    </section>
+    <section>
+      <h2>2 · Layout</h2>
+      <div id="layouts" class="layouts" role="radiogroup" aria-label="Layout"></div>
+    </section>
+    <section>
+      <h2>3 · Colour grade</h2>
+      <div id="grades" class="grades" role="radiogroup" aria-label="Colour grade"></div>
+    </section>
+    <section>
+      <h2>4 · Lettering</h2>
+      <label class="field">Title
+        <input id="title" type="text" maxlength="28" value="VICE CITY NIGHTS">
+      </label>
+      <label class="field">Subtitle (neon script)
+        <input id="subtitle" type="text" maxlength="40" value="neon dreams">
+      </label>
+      <label class="field">Badge
+        <input id="badge" type="text" maxlength="40" value="LEONIDA · EST. 2026">
+      </label>
+      <label class="field">Title size
+        <input id="titleSize" type="range" min="60" max="140" value="100">
+      </label>
+    </section>
+    <section>
+      <h2>5 · Selected panel</h2>
+      <div id="panelInfo" class="panel-info">Click a panel on the cover to edit it.</div>
+      <label class="field">Zoom
+        <input id="zoom" type="range" min="100" max="300" value="100">
+      </label>
+      <div class="row">
+        <button id="fillAll" type="button">Fill all panels with this photo</button>
+        <button id="resetPanel" type="button">Reset panel</button>
+      </div>
+    </section>
+    <section>
+      <h2>6 · Export</h2>
+      <div id="sizes" class="sizes" role="radiogroup" aria-label="Export size"></div>
+      <button id="export" type="button" class="primary big">Download PNG</button>
+      <p id="status" role="status"></p>
+    </section>
+  </aside>
+  <section class="stage">
+    <div class="stage-head">
+      <span id="stageLabel">Live preview — 1080 × 1080</span>
+      <span class="stage-hint">click a panel to select it · drag to pan · scroll to zoom</span>
+    </div>
+    <div class="canvas-wrap"><canvas id="preview" width="900" height="900" aria-label="Cover preview"></canvas></div>
+  </section>
+</main>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
