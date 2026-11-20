@@ -1,83 +1,85 @@
-# REPORT — Neon Coast (gta6-cover-art-01, v4 build)
-
-Fresh from-scratch build of the "Neon Coast" GTA 6 cover maker. All app code
-was written in this session; no file from any earlier build (v1/v2/v3) was
-read, opened or copied. Entry commit: `72fb8d512167b18d431d23c7685aa8adbb944fc2`
-("make.fun entry: gta6-cover-art-01").
+# Panel Heat — Vice Cover Studio (gta6-cover-art-01, v5 build report)
 
 ## What was built
 
-- `app/index.html` + `app/style.css` — dark neon editor: photo tray, layout
-  and grade pickers, title/subtitle/badge/stars controls, size selector,
-  zoom slider, export buttons, live preview canvas.
-- `app/src/grades.js` — 6 duotone gradient-map grades (Neon Sunset, Vice
-  Teal, Halftone Pop with comic dot overlay, Mono Noir, Palm Gold, Palm
-  Dusk), per-pixel gradient mapping with an S-curve, deterministic seeded
-  film grain.
-- `app/src/layouts.js` — 6 layouts (Hero, Split, Duo, Grid, Collage 5-panel,
-  tilted polaroid Snapshots) as pixel geometry plus the title-band placement
-  (foot, or top for Snapshots).
-- `app/src/cover.js` — canvas renderer: cover-fit photo per panel with
-  zoom/pan, grade at capped working size, halftone overlay, white gutters /
-  polaroid cards, sunset-gradient condensed title with white keyline, glowing
-  neon script subtitle, gold badge pill, five-star row, grain + vignette.
-- `app/src/editor.js` — upload (multiple files, stays on machine), click a
-  photo then a panel to place it, drag to pan, scroll to zoom, Fill all
-  panels, PNG export at 1080x1080 / 1080x1350 / 1920x1080 / all three,
-  `?shot=` scenes and `?diag=1` diagnostics.
-- `app/src/main.js` — boot.
-- `main.ts` — written in 3 separate messages (write + 2 appends); copies
-  app/ + screenshots/ and writes dossier.json via vendor/makefun-app.ts
-  (kept byte-for-byte, untouched). Starter LICENSE (MIT, SPDX line) kept.
-- `README.md` — written once, final form, carries the three live make.fun
-  badges (competition, rank, reward for acengrahmi/makefun-cover-art) plus
-  the bounty link. No shields.io, no placeholders.
-- `shots.json` — 4 scenes matching the screenshots.
+An offline browser app that turns a person's own photos plus a caption into GTA-style
+multi-panel cover art, exported as PNG. No network requests anywhere; photos are read
+locally and never leave the device. Entry point `main.ts` (hand-written for this entry)
+copies `app/` + `screenshots/` to the output directory and writes `dossier.json` through
+the kit's unmodified `vendor/makefun-app.ts`, with extra in-program gate validation
+(screenshot count and per-file byte caps, dossier size cap).
 
-## Validation evidence
+App structure (`app/`):
 
-- `mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts` succeeds; `out/`
-  holds app/, screenshots/, dossier.json; total 2,109,841 bytes (cap 64 MiB).
-- Dossier: 1,132,946 bytes (cap 1.5 MiB),
-  sha256 `6067a0a0be7933e8d698a65e7ef34a3533689959426bfb4bcbfc16dc22aef8f5`.
-  Two runs produce byte-identical dossier.json (same sha256) — deterministic.
-- Headless Chromium (Playwright headless shell, CDP driver written for this
-  build): page loads with **0 external requests** (8 local resources only);
-  `?diag=1` export check: PNG signature OK, 1,300,121 bytes at 1080x1080.
-- Interactive check via CDP: clicking Grid layout + Halftone grade redraws
-  (preview pixels change), size switch to 1920x1080 resizes the preview
-  canvas to 900x506, title input updates, tray holds 2 sample photos,
-  zero page exceptions.
-- Screenshots (all generated in-session from the app's `?shot=` scenes):
+- `src/grade.js` — the poster colour pipeline: per-pixel contrast/saturation, then a
+  gradient-map blend from one of five ramps (Vice Sunset, Neon Night, Golden Hour,
+  Teal Pop, Noir Heat) or Natural+; an optional posterised *ink* mode (7 luminance
+  bands); a print finish of halftone dots, film grain and vignette.
+- `src/panels.js` — four layouts as polygon geometry in unit space: **Vice Nine**
+  (9 panels, one diagonal cut), **Hero & Strip** (big slanted hero + three stacked),
+  **Tilted Snaps** (three rotated snapshots, drawn specially), **Full Bleed** (edge to
+  edge + corner inset). Per-panel photo assignment, pan and zoom state.
+- `src/lettering.js` — all-original drawn furniture: sunset-gradient condensed title
+  (Anton, vendored under OFL), neon script subtitle (Pacifico, OFL), five-star heat
+  meter, caption bar, circular studio badge, retro sun disc and palm silhouettes.
+- `src/cover.js` — composition: panel clipping and cover-fit drawing, painted sunset
+  backdrop for the tilted layout, furniture placement, three export sizes
+  (1080×1080, 1080×1350, 1920×1080).
+- `src/main.js` — the editor: drag-and-drop / file-picker photo intake, sample tray,
+  click-a-panel then drag to reposition and scroll to zoom, layout/grade/size pickers,
+  title/subtitle/caption fields, heat slider, one-click export of one size or all
+  three, and the `?shot=` screenshot mode used to produce `screenshots/`.
+- Five sample photos ship with the app: the kit's two CC0 samples plus three
+  image-model-generated Vice-style photos (convertible, rooftop, neon diner), so the
+  opening composition is a full nine-panel cover before the user adds anything.
 
-  | file | size | dims | scene |
-  |---|---|---|---|
-  | screenshots/1-cover.jpg | 226,081 B | 1280x720 | exported wide cover, Collage, Neon Sunset |
-  | screenshots/2-editor.jpg | 173,825 B | 1280x720 | editor, both samples loaded, Collage |
-  | screenshots/3-cover.jpg | 244,041 B | 1024x1280 | exported portrait cover, Grid, Halftone Pop |
-  | screenshots/4-cover.jpg | 171,835 B | 1080x1080 | exported square cover, Snapshots, Vice Teal |
+## Judging criteria targeted
 
-  All ≤ 256 KiB, long side ≤ 1280, short side ≥ 480. First by name is the cover.
+1. **The art** — the dossier's top image is a wide nine-panel cover in the Vice Sunset
+   grade: teal-to-salmon gradient map, halftone print texture, giant gradient title
+   with keyline, neon script subtitle, star meter, caption bar and badge. Two further
+   cover shots show the Hero layout in Golden Hour and the Tilted Snaps layout in Neon
+   Night, so the sheet demonstrates range, not one lucky render.
+2. **Works with any photo** — the pipeline is photo-agnostic (luminance-based grades,
+   cover-fit with drag/zoom per panel, defaults that compose well untouched), which is
+   what the human finalist review exercises with their own photo.
+3. **Fast and easy** — five samples preloaded into a finished cover on first paint;
+   drop photos, click a panel, type, export. Export-all writes all three sizes in one
+   click.
+4. **Polish** — dark neon editor UI with a live preview, selection outline on the
+   active panel, sensible framing hints per layout so faces are not cropped by
+   default, deterministic hand-in.
 
-## Defects found and fixed (iterate step)
+## Visual iterations
 
-1. **Blank preview** — first screenshots showed an empty canvas. Root cause:
-   `titleBand()` in layouts.js returned fractions (0..1) while `panelRects()`
-   and `paintTitleBlock()` treated them as pixels, giving panels a negative
-   height. Fixed `titleBand()` to return pixels; verified by pixel probes
-   (hero panel then read sunset orange [253,164,86]).
-2. **Title hidden behind the badge** — "NEON COAST" / "PALM HEIST" ran under
-   the gold badge pill at small sizes. Fixed by measuring the badge first and
-   centring the title in the space the badge leaves free.
-3. **Selection outline leaking into cover shots** — `startStudio()` redrew
-   the editor preview (with the gold selection dashes) after a `?shot=cover`
-   scene had painted the export canvas. Fixed: return early when a shot scene
-   ran. Cover shots are now clean; the editor shot keeps the outline as the
-   interactive affordance.
-4. **Two screenshots over the 256 KiB cap** (3-cover 413,911 B, 4-cover
-   296,635 B) — re-encoded at JPEG quality 70/75; now 244,041 B and 171,835 B.
+- **Round 1** (headless Chromium screenshots of the cover and editor): composition and
+  grade worked, but at 1920×1080 the title's cap height ran off the top edge (baseline
+  was a fixed fraction of height); the halftone was slightly heavy; the top-left
+  panel cropped its subject's face.
+  → Title is now fitted first and its baseline anchored to the fitted size; halftone
+  alpha 0.55 → 0.45; Vice blend 0.78 → 0.72 for richer photo detail; per-layout pan
+  hints added.
+- **Round 2** (all four scenes): wide cover and editor confirmed fixed. On the Hero
+  portrait the star meter sat over the top strip photo's face → that panel's default
+  pan moved down (+0.14). On the Tilted square the stars overlapped the title's last
+  letter → centered titles now anchor at 46% width with a 74% max width, clearing the
+  meter. The backdrop palms read as stray strokes behind the cards → sun disc enlarged
+  and raised, palms shrunk to small silhouettes flanking the bottom cards.
+- **Round 3** (final): all four screenshots re-rendered and inspected as the actual
+  JPEGs that ship; stars clear of faces and title, palms read as palms, covers hold
+  together at thumbnail size.
 
-## Not done by this build (parent's job)
+## Validation
 
-No `record`/`bundle`/`submit` command was run, no GitHub push, no recording
-stop. The recording (01a1f3c6-0b10-7119-a82b-81643ea73cfd) was left running.
+- `node main.ts` run twice into different output dirs: identical `dossier.json`
+  (sha256 f25f5987…), identical `app/` and `screenshots/` trees — deterministic.
+  Dossier 1,250,225 bytes (cap 1.5 MiB); app 19 files / 787,750 bytes (caps 993 files /
+  48 MiB); `app/index.html` well under 1 MiB.
+- Screenshots: 4 JPEGs, each ≤ 256 KiB, long side ≤ 1280, short side ≥ 480
+  (229,891 / 172,704 / 256,628 / 233,277 bytes).
+- `vendor/makefun-app.ts` is byte-identical to the kit's copy (md5
+  6f94f0d00d190143a0516a0d904832e3).
+- Kit check (`makefun check`) re-run against the committed tree after this report was
+  committed with the entry.
+- No network references in `app/`: all scripts, styles, fonts and images are local
+  files; fonts are SIL OFL (Anton, Pacifico) with license texts vendored.

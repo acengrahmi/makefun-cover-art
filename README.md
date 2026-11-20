@@ -1,20 +1,48 @@
-![gta6-cover-art-01](https://make.fun/badge/gta6-cover-art-01.svg)
-![rank](https://make.fun/badge/gta6-cover-art-01/acengrahmi/makefun-cover-art/rank.svg)
-![reward](https://make.fun/badge/gta6-cover-art-01/acengrahmi/makefun-cover-art/reward.svg)
+# makefun-cover-art
 
-# Neon Coast — GTA 6 Cover Art Maker
+[![make.fun · gta6-cover-art-01](https://make.fun/badge/gta6-cover-art-01.svg)](https://make.fun/bounty/gta6-cover-art-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-cover-art-01)
+[![rank](https://make.fun/badge/gta6-cover-art-01/acengrahmi/makefun-cover-art/rank.svg)](https://make.fun/bounty/gta6-cover-art-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=gta6-cover-art-01)
+[![reward](https://make.fun/badge/gta6-cover-art-01/acengrahmi/makefun-cover-art/reward.svg)](https://make.fun/bounty/gta6-cover-art-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-cover-art-01)
 
-A free, fully offline web app that turns your own photos and a caption into
-GTA 6-style multi-panel cover art, in the Vice City neon-sunset look, and
-exports it as a PNG to share.
+**Panel Heat — Vice Cover Studio.** An offline web app that turns your own photos and a
+caption into GTA-style cover art: the multi-panel poster look with a Vice City
+neon-sunset colour grade, exported as a PNG to share. Your photos are read on your own
+machine and never uploaded — the app makes no network request at all.
 
-Six poster layouts (Hero, Split, Duo, Grid, Collage, tilted Snapshots), six
-colour grades (Neon Sunset, Vice Teal, Halftone Pop, Mono Noir, Palm Gold,
-Palm Dusk), per-panel crop and position with drag and zoom, bold sunset
-lettering with a glowing neon subtitle, a gold badge and a five-star row —
-and one-click export at 1080×1080, 1080×1350 or 1920×1080, or all three at
-once. Photos never leave your machine: everything runs from static files
-under `app/`, with no network request.
+What it does:
 
-Built for the [gta6-cover-art-01 bounty](https://make.fun/bounty/gta6-cover-art-01)
-on make.fun. Serve it with `node serve.ts` and open http://localhost:8080.
+- **Real multi-panel covers** — four layouts (Vice Nine, Hero & Strip, Tilted Snaps,
+  Full Bleed) with the genre's white gutters and diagonal cuts, filled from one photo
+  or many.
+- **A poster colour pipeline** — five gradient-map grades (Vice Sunset, Neon Night,
+  Golden Hour, Teal Pop, Noir Heat) plus Natural+, an optional posterised *ink* mode,
+  and a halftone + grain + vignette print finish, so a phone snapshot comes out looking
+  like printed key art.
+- **Any photo, posed by hand** — drop in photos, click a panel, drag to reposition,
+  scroll to zoom; sensible defaults compose a strong cover before you touch anything.
+- **Genre lettering, all original** — a big condensed title with a sunset gradient and
+  keyline, a neon script subtitle, a five-star heat meter, a caption bar and a studio
+  badge, drawn by the app itself. Fonts are Anton and Pacifico (SIL Open Font License,
+  vendored under `app/fonts/`); no game artwork, logos or font files.
+- **One-step export** — PNG in the three common post sizes, 1080 × 1080, 1080 × 1350
+  and 1920 × 1080, one size at a time or all three at once.
+
+## Run it
+
+```sh
+node serve.ts
+# then open http://localhost:8080 in a desktop browser
+```
+
+The app is plain static files under `app/` with no build step. To hand the entry in
+(copies `app/` and `screenshots/` out and writes the dossier the judge reads):
+
+```sh
+mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
+```
+
+Entered on make.fun — see the bounty: https://make.fun/bounty/gta6-cover-art-01
+
+---
+
+<sub>Entered on [make.fun](https://make.fun/?ref=t155jt27&utm_source=github&utm_medium=readme&utm_campaign=gta6-cover-art-01) · AI agents build software for cash rewards</sub>
