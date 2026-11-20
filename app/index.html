@@ -3,85 +3,99 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Neon Coast — GTA 6 Cover Art Maker</title>
+<title>Panel Heat — Vice Cover Studio</title>
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<header class="topbar">
-  <div class="brand"><span class="brand-mark">NC</span><span class="brand-name">Neon Coast</span><span class="brand-sub">cover studio</span></div>
-  <div class="top-actions">
-    <button id="export-all" type="button" class="btn btn-gold">Export all 3 sizes</button>
+<header class="brand">
+  <span class="brand-star" aria-hidden="true">★</span>
+  <div>
+    <h1>Panel Heat</h1>
+    <p>Vice Cover Studio — your photo, turned into poster-grade cover art. Offline: photos never leave this machine.</p>
   </div>
 </header>
-<main class="studio">
-  <aside class="controls" aria-label="Cover controls">
-    <section class="group">
-      <h2>1 · Photos</h2>
-      <label class="upload">Add photos from your machine
-        <input id="photo-input" type="file" accept="image/*" multiple>
-      </label>
-      <div id="tray" class="tray" aria-label="Your photos"></div>
-      <div class="row">
-        <button id="use-samples" type="button" class="btn">Load sample photos</button>
-        <button id="fill-all" type="button" class="btn">Fill all panels</button>
-      </div>
-      <p class="note">Click a photo, then click a panel to place it there. Photos stay on your machine.</p>
-    </section>
-    <section class="group">
-      <h2>2 · Layout</h2>
-      <div id="layout-picker" class="picker"></div>
-    </section>
-    <section class="group">
-      <h2>3 · Colour grade</h2>
-      <div id="grade-picker" class="picker"></div>
-    </section>
-    <section class="group">
-      <h2>4 · Words</h2>
-      <label class="field">Title
-        <input id="title-input" type="text" maxlength="28" value="Neon Coast">
-      </label>
-      <label class="field">Neon subtitle
-        <input id="subtitle-input" type="text" maxlength="32" value="vice city nights">
-      </label>
-      <label class="field">Badge
-        <input id="badge-input" type="text" maxlength="18" value="EST. 2026">
-      </label>
-      <label class="field">Stars
-        <select id="stars-input">
-          <option value="5" selected>★★★★★ (5)</option>
-          <option value="4">★★★★ (4)</option>
-          <option value="3">★★★ (3)</option>
-          <option value="2">★★ (2)</option>
-          <option value="1">★ (1)</option>
-          <option value="0">No stars</option>
-        </select>
-      </label>
-    </section>
-    <section class="group">
-      <h2>5 · Size &amp; export</h2>
-      <label class="field">Post size
-        <select id="size-input">
-          <option value="1080x1080" selected>Square · 1080 × 1080</option>
-          <option value="1080x1350">Portrait · 1080 × 1350</option>
-          <option value="1920x1080">Wide · 1920 × 1080</option>
-        </select>
-      </label>
-      <label class="field">Zoom selected panel
-        <input id="zoom-input" type="range" min="100" max="300" value="100">
-      </label>
-      <div class="row">
-        <button id="export-one" type="button" class="btn btn-gold">Export PNG</button>
-        <button id="shuffle" type="button" class="btn">Shuffle grade</button>
-      </div>
-      <p id="status" role="status"></p>
-    </section>
-  </aside>
+
+<main class="workspace">
   <section class="stage">
-    <div class="canvas-frame"><canvas id="preview" width="900" height="900" aria-label="Cover preview"></canvas></div>
-    <p class="hint">Click a panel to select it — drag to pan the photo, scroll to zoom. Click a photo in the tray, then a panel, to place it.</p>
-    <pre id="diag" hidden></pre>
+    <div class="stage-frame">
+      <canvas id="previewCanvas" width="864" height="1080" aria-label="Live cover preview"></canvas>
+    </div>
+    <p class="stage-hint">Click a panel to select it · drag to reposition its photo · scroll to zoom it</p>
   </section>
+
+  <aside class="controls">
+    <fieldset>
+      <legend>1 · Your photos</legend>
+      <label class="dropzone" id="dropZone">
+        <input id="photoInput" type="file" accept="image/*" multiple>
+        <span>Drop photos here, or click to choose</span>
+      </label>
+      <div class="photo-tray" id="photoTray" aria-label="Photos"></div>
+      <p class="note">Click a photo to pour it into the selected panel. The five starters are samples — swap in your own.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>2 · Layout</legend>
+      <div class="choice-grid" id="layoutChoices">
+        <button type="button" data-layout="nine"><strong>Vice Nine</strong><span>The classic nine-panel poster grid</span></button>
+        <button type="button" data-layout="hero"><strong>Hero &amp; Strip</strong><span>One big panel, three stacked</span></button>
+        <button type="button" data-layout="tilt"><strong>Tilted Snaps</strong><span>Snapshots over a sunset sky</span></button>
+        <button type="button" data-layout="bleed"><strong>Full Bleed</strong><span>Edge to edge, corner inset</span></button>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>3 · Colour grade</legend>
+      <div class="choice-grid" id="gradeChoices">
+        <button type="button" data-grade="vice"><span class="swatch swatch-vice"></span><strong>Vice Sunset</strong></button>
+        <button type="button" data-grade="neon"><span class="swatch swatch-neon"></span><strong>Neon Night</strong></button>
+        <button type="button" data-grade="gold"><span class="swatch swatch-gold"></span><strong>Golden Hour</strong></button>
+        <button type="button" data-grade="teal"><span class="swatch swatch-teal"></span><strong>Teal Pop</strong></button>
+        <button type="button" data-grade="noir"><span class="swatch swatch-noir"></span><strong>Noir Heat</strong></button>
+        <button type="button" data-grade="natural"><span class="swatch swatch-natural"></span><strong>Natural+</strong></button>
+      </div>
+      <label class="toggle"><input id="inkToggle" type="checkbox"> Ink the panels (posterised, banded colour)</label>
+      <label class="toggle"><input id="halftoneToggle" type="checkbox" checked> Halftone print texture</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>4 · Words &amp; heat</legend>
+      <label class="field">Title <input id="titleInput" type="text" maxlength="24" value="NEON HEAT"></label>
+      <label class="field">Script subtitle <input id="subtitleInput" type="text" maxlength="30" value="vice nights"></label>
+      <label class="field">Caption bar <input id="captionInput" type="text" maxlength="42" value="ONE LAST RIDE"></label>
+      <label class="field">Heat <span class="heat-row"><input id="heatRange" type="range" min="0" max="5" step="1" value="4"> <span id="heatValue">★★★★☆</span></span></label>
+    </fieldset>
+
+    <fieldset>
+      <legend>5 · Selected panel</legend>
+      <p class="note" id="selectedPanelLabel">Panel 1 of 9</p>
+      <label class="field">Zoom <input id="zoomRange" type="range" min="1" max="3" step="0.01" value="1"></label>
+      <div class="button-row">
+        <button type="button" id="centerPanelButton">Centre photo</button>
+        <button type="button" id="fillPanelsButton">Fill every panel with it</button>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>6 · Export PNG</legend>
+      <div class="choice-grid" id="sizeChoices">
+        <button type="button" data-size="square"><strong>Square</strong><span>1080 × 1080</span></button>
+        <button type="button" data-size="portrait"><strong>Portrait</strong><span>1080 × 1350</span></button>
+        <button type="button" data-size="wide"><strong>Wide</strong><span>1920 × 1080</span></button>
+      </div>
+      <div class="button-row">
+        <button type="button" id="exportButton" class="primary">Export this size</button>
+        <button type="button" id="exportAllButton">Export all three</button>
+      </div>
+      <p class="note" id="statusLine" role="status">Ready when you are.</p>
+    </fieldset>
+  </aside>
 </main>
+
+<footer class="colophon">
+  <p>Panel Heat runs entirely in your browser — no uploads, no accounts. Lettering: Anton &amp; Pacifico, SIL Open Font License (see app/fonts/). Sample photos were made with an image model for this app.</p>
+</footer>
+
 <script type="module" src="./src/main.js"></script>
 </body>
 </html>
